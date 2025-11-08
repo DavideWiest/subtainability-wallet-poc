@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "question": "Are you interested in activities like DIY, thrifting, cycling, walking, or gardening?",
+    "shortForm": "Eco-friendly Activities"
+  },
+  {
+    "id": 2,
+    "question": "Do you usually travel to university or work by car or electric vehicle?",
+    "shortForm": "Commuting by Car"
+  },
+  {
+    "id": 3,
+    "question": "Do you usually travel to university or work by bicycle or public transport?",
+    "shortForm": "Commuting by Green Transport"
+  },
+  {
+    "id": 4,
+    "question": "Do you have access to an outdoor space such as a garden or balcony?",
+    "shortForm": "Outdoor Access"
+  },
+  {
+    "id": 5,
+    "question": "Do you prefer to eat mostly plant-based foods?",
+    "shortForm": "Plant-based Diet"
+  },
+  {
+    "id": 6,
+    "question": "Do you regularly separate your household waste for recycling?",
+    "shortForm": "Recycling Habit"
+  },
+  {
+    "id": 7,
+    "question": "Are you interested in making small lifestyle changes to reduce your environmental impact?",
+    "shortForm": "Open to Lifestyle Changes"
+  },
+  {
+    "id": 8,
+    "question": "Do you own your home or apartment?",
+    "shortForm": "Home Ownership"
+  },
+  {
+    "id": 9,
+    "question": "Are you interested in using renewable energy technologies such as solar panels?",
+    "shortForm": "Renewable Energy"
+  },
+  {
+    "id": 10,
+    "question": "Would you like to participate in community environmental activities like clean-ups or tree planting?",
+    "shortForm": "Community Action"
+  }
+]

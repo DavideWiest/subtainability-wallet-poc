@@ -1,0 +1,100 @@
+[
+  {
+    "challenge": "Participate in DIY or thrifting activity",
+    "time_variable": "P1W",
+    "badge_image_theme": "crafting_tools_icon",
+    "currency_reward_points": 35,
+    "impact": "You embrace creativity, health, and nature, helping reduce waste and pollution while nurturing life."
+  },
+  {
+    "challenge": "Cycle to work or university",
+    "time_variable": "P1W",
+    "badge_image_theme": "bicycle_silhouette",
+    "currency_reward_points": 75,
+    "impact": "Each pedal stroke reduces pollution and lifts your spirit—making a greener world and a healthier you."
+  },
+  {
+    "challenge": "Walk to the supermarket",
+    "time_variable": "P1W",
+    "badge_image_theme": "footprints_pathway",
+    "currency_reward_points": 50,
+    "impact": "Every step you take reduces pollution and boosts your health—small actions with big rewards."
+  },
+  {
+    "challenge": "Plant vegetables or maintain compost",
+    "time_variable": "P1W",
+    "badge_image_theme": "leaf_plant_sprout",
+    "currency_reward_points": 35,
+    "impact": "Your connection to outdoor space lets you grow life and harness clean energy, benefiting the planet."
+  },
+  {
+    "challenge": "Use public transportation for commuting",
+    "time_variable": "P1W",
+    "badge_image_theme": "bus_train_icon",
+    "currency_reward_points": 60,
+    "impact": "You help clear the air and create quieter, happier cities—protecting children and nature."
+  },
+  {
+    "challenge": "Charge electric vehicle during nighttime",
+    "time_variable": "P1W",
+    "badge_image_theme": "electric_plug_moon",
+    "currency_reward_points": 45,
+    "impact": "You use cleaner energy and help keep the air fresh by charging smartly."
+  },
+  {
+    "challenge": "Carpool to work",
+    "time_variable": "P1W",
+    "badge_image_theme": "car_group_icon",
+    "currency_reward_points": 60,
+    "impact": "More friends, fewer cars—cleaner air and joyful journeys that connect people."
+  },
+  {
+    "challenge": "Carpool children to kindergarten or school",
+    "time_variable": "P1W",
+    "badge_image_theme": "car_group_icon_children",
+    "currency_reward_points": 60,
+    "impact": "Sharing rides for kids reduces traffic and pollution, creating a safer and cleaner environment for all."
+  },
+  {
+    "challenge": "Use rented bike for commuting or errands",
+    "time_variable": "P1W",
+    "badge_image_theme": "bike_icon",
+    "currency_reward_points": 35,
+    "impact": "Every ride is an act of kindness—reducing pollution, easing traffic, and adding joy to your day."
+  },
+  {
+    "challenge": "Eat plant-based meals",
+    "time_variable": "P1W",
+    "badge_image_theme": "leaf_plate_carrot",
+    "currency_reward_points": 50,
+    "impact": "Choosing plants helps protect forests, animals, and the climate—one meal at a time."
+  },
+  {
+    "challenge": "Separate household waste for recycling",
+    "time_variable": "P1W",
+    "badge_image_theme": "recycling_bins",
+    "currency_reward_points": 30,
+    "impact": "You are part of the solution, giving materials a new life and reducing landfill harm."
+  },
+  {
+    "challenge": "Turn off unused appliances",
+    "time_variable": "P1W",
+    "badge_image_theme": "power_button_icon",
+    "currency_reward_points": 30,
+    "impact": "Your small steps brighten the future, proving change adds up."
+  },
+  {
+    "challenge": "Maintain home solar panel system",
+    "time_variable": "P1W",
+    "badge_image_theme": "solar_panel_sun_icon",
+    "currency_reward_points": 90,
+    "impact": "You become a sunshine hero, generating clean power and shrinking your footprint."
+  },
+  {
+    "challenge": "Participate in riverside or community cleanup",
+    "time_variable": "P1W",
+    "badge_image_theme": "clean_riverside_icon",
+    "currency_reward_points": 45,
+    "impact": "Joining others creates stronger bonds and a healthier environment for all."
+  }
+]

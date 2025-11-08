@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Sustainable Store Gift Card",
+    "description": "Gift card for eco-friendly products at local sustainable stores",
+    "coinsRequired": 100,
+    "category": "gift_card"
+  },
+  {
+    "id": "2",
+    "title": "Public Transit Monthly Pass",
+    "description": "Discount voucher for monthly public transportation pass",
+    "coinsRequired": 200,
+    "category": "discount"
+  },
+  {
+    "id": "3",
+    "title": "Organic Market Coupon",
+    "description": "15% off at participating organic markets and farm shops",
+    "coinsRequired": 150,
+    "category": "coupon"
+  },
+  {
+    "id": "4",
+    "title": "Bike Shop Voucher",
+    "description": "Voucher for bike maintenance or accessories at local shops",
+    "coinsRequired": 175,
+    "category": "gift_card"
+  },
+  {
+    "id": "5",
+    "title": "Zero Waste Store Discount",
+    "description": "20% discount at participating zero waste stores",
+    "coinsRequired": 125,
+    "category": "discount"
+  },
+  {
+    "id": "6",
+    "title": "Plant Nursery Gift Card",
+    "description": "Gift card for plants, seeds, and gardening supplies",
+    "coinsRequired": 150,
+    "category": "gift_card"
+  }
+]
