@@ -14,7 +14,8 @@ import {
   Zap,
   ShoppingBag,
   Wallet,
-  Award
+  Award,
+  Plus
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
@@ -28,15 +29,25 @@ const iconMap: Record<string, any> = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [balance, setBalance] = useState(450);
+  const [selectedChallengeIds, setSelectedChallengeIds] = useState<string[]>([]);
 
   useEffect(() => {
     const savedBalance = localStorage.getItem('walletBalance');
     if (savedBalance) {
       setBalance(parseInt(savedBalance));
     }
+    
+    const saved = localStorage.getItem('selectedChallenges');
+    if (saved) {
+      setSelectedChallengeIds(JSON.parse(saved));
+    }
   }, []);
 
-  const totalStreak = mockChallenges.reduce((sum, c) => sum + c.streak, 0);
+  const activeChallenges = mockChallenges.filter(c => 
+    selectedChallengeIds.length === 0 || selectedChallengeIds.includes(c.id)
+  );
+  
+  const totalStreak = activeChallenges.reduce((sum, c) => sum + c.streak, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5">
@@ -48,14 +59,24 @@ const Dashboard = () => {
               <h1 className="text-4xl font-bold text-foreground mb-2">Your Challenges</h1>
               <p className="text-muted-foreground">Keep up the great work! 🌱</p>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/wallet')}
-              className="gap-2"
-            >
-              <Wallet className="w-5 h-5" />
-              Wallet
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/browse-challenges')}
+                className="gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Add Challenge
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate('/wallet')}
+                className="gap-2"
+              >
+                <Wallet className="w-5 h-5" />
+                Wallet
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -72,14 +93,14 @@ const Dashboard = () => {
               </div>
             </Card>
 
-            <Card className="p-6 bg-gradient-card border-accent/20 hover:shadow-lg transition-all">
+            <Card className="p-6 bg-gradient-card border-secondary/20 hover:shadow-lg transition-all">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Wallet Balance</p>
-                  <p className="text-3xl font-bold text-accent">{balance} coins</p>
+                  <p className="text-3xl font-bold text-secondary">{balance} coins</p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                  <Coins className="w-6 h-6 text-accent" />
+                <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
+                  <Coins className="w-6 h-6 text-secondary" />
                 </div>
               </div>
             </Card>
@@ -88,7 +109,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Active Challenges</p>
-                  <p className="text-3xl font-bold text-secondary">{mockChallenges.length}</p>
+                  <p className="text-3xl font-bold text-secondary">{activeChallenges.length}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-secondary" />
@@ -104,7 +125,16 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockChallenges.map((challenge, index) => {
+          {activeChallenges.length === 0 ? (
+            <Card className="col-span-full p-12 bg-gradient-card text-center">
+              <p className="text-lg text-muted-foreground mb-4">No active challenges yet</p>
+              <Button onClick={() => navigate('/browse-challenges')} className="bg-gradient-primary">
+                <Plus className="w-5 h-5 mr-2" />
+                Browse Challenges
+              </Button>
+            </Card>
+          ) : (
+            activeChallenges.map((challenge, index) => {
             const Icon = iconMap[challenge.icon] || Award;
             return (
               <Card
@@ -134,14 +164,15 @@ const Dashboard = () => {
                     <Flame className="w-5 h-5 text-primary" />
                     <span className="font-semibold text-foreground">{challenge.streak} day streak</span>
                   </div>
-                  <div className="flex items-center gap-1 text-accent font-semibold">
+                  <div className="flex items-center gap-1 text-secondary font-semibold">
                     <Coins className="w-5 h-5" />
                     {challenge.reward}
                   </div>
                 </div>
               </Card>
             );
-          })}
+          })
+          )}
         </div>
       </div>
     </div>

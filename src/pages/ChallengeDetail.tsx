@@ -129,7 +129,7 @@ const ChallengeDetail = () => {
                     <Calendar className="w-4 h-4 mr-1" />
                     {challenge.category}
                   </Badge>
-                  <Badge variant="outline" className="text-sm text-accent">
+                  <Badge variant="outline" className="text-sm text-secondary">
                     <Coins className="w-4 h-4 mr-1" />
                     {challenge.reward} coins per completion
                   </Badge>
@@ -166,12 +166,12 @@ const ChallengeDetail = () => {
               <p className="text-sm text-muted-foreground">Keep it going! 🔥</p>
             </Card>
 
-            <Card className="p-6 bg-gradient-card">
+          <Card className="p-6 bg-gradient-card">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-foreground">Total Earned</h3>
-                <Coins className="w-8 h-8 text-accent" />
+                <Coins className="w-8 h-8 text-secondary" />
               </div>
-              <p className="text-4xl font-bold text-accent mb-2">{localStreak * challenge.reward}</p>
+              <p className="text-4xl font-bold text-secondary mb-2">{localStreak * challenge.reward}</p>
               <p className="text-sm text-muted-foreground">coins from this challenge</p>
             </Card>
           </div>

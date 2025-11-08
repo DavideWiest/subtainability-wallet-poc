@@ -12,7 +12,6 @@ import {
   Tag,
   Cloud,
   Percent,
-  Sparkles,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
@@ -110,8 +109,7 @@ const Wallet = () => {
           {/* Claimable Rewards Section */}
           {claimableRewards.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-accent" />
+              <h2 className="text-2xl font-bold text-foreground mb-4">
                 Ready to Claim
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,22 +118,22 @@ const Wallet = () => {
                   .map((reward) => {
                     const Icon = iconMap[reward.icon] || Tag;
                     return (
-                      <Card
-                        key={reward.id}
-                        className="p-6 bg-gradient-accent border-accent shadow-lg"
-                      >
+                  <Card
+                    key={reward.id}
+                    className="p-6 bg-gradient-secondary border-secondary shadow-lg"
+                  >
                         <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 rounded-full bg-accent-foreground/10 flex items-center justify-center">
-                            <Icon className="w-6 h-6 text-accent-foreground" />
+                        <div className="w-12 h-12 rounded-full bg-secondary-foreground/10 flex items-center justify-center">
+                          <Icon className="w-6 h-6 text-secondary-foreground" />
                           </div>
-                          <Badge className="bg-accent-foreground text-accent">
-                            Ready
-                          </Badge>
-                        </div>
-                        <h3 className="text-xl font-semibold text-accent-foreground mb-2">
-                          {reward.title}
-                        </h3>
-                        <p className="text-sm text-accent-foreground/80 mb-4">
+                        <Badge className="bg-secondary-foreground text-secondary">
+                          Ready
+                        </Badge>
+                      </div>
+                      <h3 className="text-xl font-semibold text-secondary-foreground mb-2">
+                        {reward.title}
+                      </h3>
+                      <p className="text-sm text-secondary-foreground/80 mb-4">
                           {reward.description}
                         </p>
                         <Button

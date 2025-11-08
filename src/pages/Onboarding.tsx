@@ -21,18 +21,21 @@ const Onboarding = () => {
 
   // Recommend challenges based on answers
   const getRecommendedChallenges = (): Challenge[] => {
-    const yesCount = Object.values(answers).filter(a => a === 'yes').length;
+    const yesAnswers = Object.entries(answers)
+      .filter(([_, answer]) => answer === 'yes')
+      .map(([questionId]) => questionId);
     
-    // More "yes" answers = more recommendations
-    if (yesCount >= 4) {
-      return mockChallenges;
-    } else if (yesCount >= 3) {
-      return mockChallenges.slice(0, 4);
-    } else if (yesCount >= 2) {
+    if (yesAnswers.length === 0) {
+      // If no yes answers, show first 3 challenges
       return mockChallenges.slice(0, 3);
-    } else {
-      return mockChallenges.slice(0, 2);
     }
+    
+    // Filter challenges that match any of the yes answers
+    const matchedChallenges = mockChallenges.filter(challenge =>
+      challenge.reasons.some(reason => yesAnswers.includes(reason))
+    );
+    
+    return matchedChallenges.length > 0 ? matchedChallenges : mockChallenges.slice(0, 3);
   };
 
   const handleAnswer = (answer: 'yes' | 'no' | 'skip') => {
@@ -44,9 +47,7 @@ const Onboarding = () => {
     } else {
       // Show recommendations after last question
       setShowRecommendations(true);
-      // Pre-select all recommended challenges
-      const recommended = getRecommendedChallenges();
-      setSelectedChallenges(recommended.map(c => c.id));
+      // Don't pre-select any challenges
     }
   };
 
@@ -133,15 +134,9 @@ const Onboarding = () => {
         ) : (
           <>
             <div className="mb-8">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Sparkles className="w-6 h-6 text-accent" />
-                <h2 className="text-2xl font-semibold text-center">
-                  Recommended Challenges for You
-                </h2>
-              </div>
-              <p className="text-center text-muted-foreground mb-6">
-                Based on your answers, we've selected these challenges to help you get started
-              </p>
+              <h2 className="text-2xl font-semibold text-center mb-6">
+                Select Your Challenges
+              </h2>
 
               <div className="space-y-3 mb-8">
                 {recommendedChallenges.map((challenge) => (
@@ -183,9 +178,9 @@ const Onboarding = () => {
               size="lg"
               onClick={handleSubmit}
               disabled={selectedChallenges.length === 0}
-              className="w-full bg-gradient-accent hover:shadow-glow transition-all"
+              className="w-full bg-gradient-primary hover:shadow-glow transition-all"
             >
-              Start with {selectedChallenges.length} Challenge{selectedChallenges.length !== 1 ? 's' : ''}
+              Start Journey
             </Button>
           </>
         )}

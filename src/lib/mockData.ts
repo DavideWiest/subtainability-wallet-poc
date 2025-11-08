@@ -14,6 +14,7 @@ export interface Challenge {
   icon: string;
   category: string;
   lastCompleted?: string;
+  reasons: string[]; // Question IDs that trigger this challenge recommendation
 }
 
 export interface RewardItem {
@@ -45,6 +46,7 @@ export const mockChallenges: Challenge[] = [
     streak: 7,
     icon: 'Recycle',
     category: 'Waste Reduction',
+    reasons: ['1', '3'], // Carbon footprint, environmental impact
   },
   {
     id: '2',
@@ -55,6 +57,7 @@ export const mockChallenges: Challenge[] = [
     streak: 3,
     icon: 'Leaf',
     category: 'Diet',
+    reasons: ['1', '2'], // Carbon footprint, sustainable habits
   },
   {
     id: '3',
@@ -65,6 +68,7 @@ export const mockChallenges: Challenge[] = [
     streak: 12,
     icon: 'Bus',
     category: 'Transportation',
+    reasons: ['1', '3'], // Carbon footprint, environmental impact
   },
   {
     id: '4',
@@ -75,6 +79,7 @@ export const mockChallenges: Challenge[] = [
     streak: 4,
     icon: 'Zap',
     category: 'Energy',
+    reasons: ['1', '2', '3'], // Carbon footprint, sustainable habits, environmental impact
   },
   {
     id: '5',
@@ -85,6 +90,7 @@ export const mockChallenges: Challenge[] = [
     streak: 2,
     icon: 'ShoppingBag',
     category: 'Shopping',
+    reasons: ['1', '4'], // Carbon footprint, community challenges
   },
 ];
 
