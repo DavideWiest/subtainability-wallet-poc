@@ -3,51 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { mockChallenges } from '@/lib/mockData';
+import api, { Challenge } from '@/lib/api';
 import { 
   Flame, 
   Coins, 
   TrendingUp, 
-  Leaf,
-  Recycle,
-  Bus,
-  Zap,
-  ShoppingBag,
   Wallet,
   Award,
   Plus
 } from 'lucide-react';
 
-const iconMap: Record<string, any> = {
-  Recycle,
-  Leaf,
-  Bus,
-  Zap,
-  ShoppingBag,
-};
+// Dashboard now uses backend Challenge shape; icons are not currently mapped
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [balance, setBalance] = useState(450);
+  const [balance, setBalance] = useState(0);
   const [selectedChallengeIds, setSelectedChallengeIds] = useState<string[]>([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
 
   useEffect(() => {
-    const savedBalance = localStorage.getItem('walletBalance');
-    if (savedBalance) {
-      setBalance(parseInt(savedBalance));
-    }
-    
-    const saved = localStorage.getItem('selectedChallenges');
-    if (saved) {
-      setSelectedChallengeIds(JSON.parse(saved));
-    }
+    const load = async () => {
+      try {
+        const [chals, profile] = await Promise.all([
+          api.getPersonalizedChallenges(),
+          api.getUserProfile()
+        ]);
+        setChallenges(chals);
+        setBalance(profile.walletBalance || 0);
+        const activeIds = Object.keys(profile.activeHabits || {});
+        setSelectedChallengeIds(activeIds);
+      } catch (err) {
+        console.error('Failed to load dashboard data', err);
+      }
+    };
+    load();
   }, []);
 
-  const activeChallenges = mockChallenges.filter(c => 
+  const activeChallenges = challenges.filter(c =>
     selectedChallengeIds.length === 0 || selectedChallengeIds.includes(c.id)
   );
-  
-  const totalStreak = activeChallenges.reduce((sum, c) => sum + c.streak, 0);
+
+  const totalStreak = activeChallenges.reduce((sum, c) => sum + (c.currentStreak || 0), 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5">
@@ -135,7 +131,6 @@ const Dashboard = () => {
             </Card>
           ) : (
             activeChallenges.map((challenge, index) => {
-            const Icon = iconMap[challenge.icon] || Award;
             return (
               <Card
                 key={challenge.id}
@@ -145,15 +140,15 @@ const Dashboard = () => {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Icon className="w-6 h-6 text-primary" />
+                    <span className="text-primary font-medium">{challenge.challenge?.charAt(0) ?? '?'}</span>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {challenge.recurrence}
+                    {challenge.time_variable}
                   </Badge>
                 </div>
 
                 <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                  {challenge.title}
+                  {challenge.challenge}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                   {challenge.description}
@@ -162,11 +157,11 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2">
                     <Flame className="w-5 h-5 text-primary" />
-                    <span className="font-semibold text-foreground">{challenge.streak} day streak</span>
+                    <span className="font-semibold text-foreground">{challenge.currentStreak || 0} day streak</span>
                   </div>
                   <div className="flex items-center gap-1 text-secondary font-semibold">
                     <Coins className="w-5 h-5" />
-                    {challenge.reward}
+                    {challenge.currency_reward_points}
                   </div>
                 </div>
               </Card>

@@ -8,7 +8,7 @@ import numpy as np
 raw = np.array([
     # Q1  Q2   Q3   Q4   Q5   Q6   Q7   Q8   Q9   Q10
     [ 0.75, -0.20,  0.30,  0.25,  0.10,  0.05,  0.40,  0.10,  0.20,  0.05],  # 1 DIY / thrifting
-    [ 0.60, -0.70,  0.70,  0.00,  0.60, -0.30,  0.20,  0.10,  0.50,  0.00],  # 2 Cycle to work
+    [ 0.60, -0.70,  0.70,  0.00,  0.40, -0.30,  0.20,  0.10,  0.50,  0.00],  # 2 Cycle to work
     [ 0.40, -0.50,  0.50,  0.10,  0.20, -0.10,  0.00,  0.00,  0.10,  0.10],  # 3 Walk to supermarket
     [ 0.50, -0.10,  0.20,  0.85,  0.00,  0.00,  0.00,  0.00,  0.00,  0.30],  # 4 Plant / compost
     [ 0.20, -0.60,  0.70,  0.00,  0.75, -0.20,  0.10,  0.00,  0.20,  0.00],  # 5 Public transport
@@ -29,7 +29,7 @@ row_max[row_max == 0] = 1.0
 scaled = raw / row_max
 
 # Save to file
-np.save('challenge_prediction.npy', scaled)
+np.save('data/challenge_prediction.npy', scaled)
 
 # Show summary
 print('Saved /mnt/data/challenge_prediction.npy with shape', scaled.shape)

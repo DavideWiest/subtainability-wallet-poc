@@ -2,8 +2,11 @@ import axiosInstance from './axios';
 
 export interface Question {
   id: number;
-  text: string;
-  description: string;
+  // backend uses `question` field; keep `text` as optional alias for compatibility
+  question: string;
+  text?: string;
+  shortForm?: string;
+  description?: string;
 }
 
 export interface Challenge {

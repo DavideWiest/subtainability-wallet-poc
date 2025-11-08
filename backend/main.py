@@ -161,12 +161,14 @@ def update_user_profile():
 
 @app.route("/api/challenges/personalized", methods=["GET"])
 def get_personalized_challenges():
+    print("Recommending personalized challenges")
     if "answers" not in user_data or not user_data["answers"]:
+        raise RuntimeError("User has not completed onboarding with answers yet")
         # Return all challenges with IDs when no personalization is available
-        return jsonify([
-            {**challenge, "id": str(idx + 1)}
-            for idx, challenge in enumerate(challenges_data)
-        ])
+        # return jsonify([
+        #     {**challenge, "id": str(idx + 1)}
+        #     for idx, challenge in enumerate(challenges_data)
+        # ])
 
     # Get recommendations and reasons from the recommender
     recommendations = recommender(user_data["answers"])
