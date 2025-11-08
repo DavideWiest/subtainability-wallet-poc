@@ -82,6 +82,11 @@ class ApiClient {
     return response.data;
   }
 
+  async getChallenge(challengeId: string): Promise<Challenge> {
+    const response = await axiosInstance.get(`/challenges/${challengeId}`);
+    return response.data;
+  }
+
   async startChallenge(challengeId: string): Promise<Challenge> {
     const response = await axiosInstance.post(`/challenges/${challengeId}/start`);
     return response.data;

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { mockChallenges } from '@/lib/mockData';
+import api from '@/lib/api';
 import {
   ArrowLeft,
   Flame,
@@ -30,21 +30,39 @@ const iconMap: Record<string, any> = {
   ShoppingBag,
 };
 
-const ChallengeDetail = () => {
+const ChallengeDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const challenge = mockChallenges.find((c) => c.id === id);
-  const [localStreak, setLocalStreak] = useState(challenge?.streak || 0);
+  const [challenge, setChallenge] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isCompleting, setIsCompleting] = useState(false);
 
-  useEffect(() => {
-    if (challenge) {
-      const savedStreak = localStorage.getItem(`challenge_${id}_streak`);
-      if (savedStreak) {
-        setLocalStreak(parseInt(savedStreak));
-      }
+  const fetchChallenge = async (challengeId?: string) => {
+    if (!challengeId) return;
+    setIsLoading(true);
+    try {
+      const res = await api.getChallenge(challengeId);
+      setChallenge(res);
+    } catch (err) {
+      console.error('Failed to load challenge', err);
+      setChallenge(null);
+    } finally {
+      setIsLoading(false);
     }
-  }, [id, challenge]);
+  };
+
+  useEffect(() => {
+    fetchChallenge(id as string);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-lg text-muted-foreground">Loading challenge…</p>
+      </div>
+    );
+  }
 
   if (!challenge) {
     return (
@@ -59,43 +77,48 @@ const ChallengeDetail = () => {
 
   const Icon = iconMap[challenge.icon] || Award;
 
+  const title = challenge.challenge || challenge.title || 'Untitled Challenge';
+  const reward = challenge.currency_reward_points ?? challenge.reward ?? 0;
+  const currentStreak = challenge.currentStreak ?? challenge.streak ?? 0;
+  const timeVariable = challenge.time_variable ?? challenge.timeVariable ?? '';
+
   const handleComplete = async () => {
+    if (!id) return;
     setIsCompleting(true);
-    
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      await api.completeChallenge(id);
 
-    const newStreak = localStreak + 1;
-    setLocalStreak(newStreak);
-    localStorage.setItem(`challenge_${id}_streak`, newStreak.toString());
+      // Celebration!
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#f59e0b', '#3b82f6'],
+      });
 
-    const currentBalance = parseInt(localStorage.getItem('walletBalance') || '450');
-    const newBalance = currentBalance + challenge.reward;
-    localStorage.setItem('walletBalance', newBalance.toString());
+      toast.success(
+        <div className="flex items-center gap-2">
+          <Award className="w-5 h-5" />
+          <div>
+            <p className="font-semibold">Challenge Completed!</p>
+            <p className="text-sm">+{reward} coins added to your wallet</p>
+          </div>
+        </div>,
+        { duration: 4000 }
+      );
 
-    // Celebration!
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#10b981', '#f59e0b', '#3b82f6'],
-    });
-
-    toast.success(
-      <div className="flex items-center gap-2">
-        <Award className="w-5 h-5" />
-        <div>
-          <p className="font-semibold">Challenge Completed!</p>
-          <p className="text-sm">+{challenge.reward} coins added to your wallet</p>
-        </div>
-      </div>,
-      { duration: 4000 }
-    );
-
-    setIsCompleting(false);
+      // Refresh challenge data (backend is source-of-truth)
+      await fetchChallenge(id);
+      // Optionally you could also refresh user profile here if you have global state
+    } catch (err) {
+      console.error('Complete failed', err);
+      toast.error('Failed to complete challenge. Please try again.');
+    } finally {
+      setIsCompleting(false);
+    }
   };
 
-  const progressPercentage = (localStreak / 30) * 100; // 30 days milestone
+  const progressPercentage = (currentStreak / 30) * 100; // 30 days milestone
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/5">
@@ -118,20 +141,20 @@ const ChallengeDetail = () => {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-foreground">{challenge.title}</h1>
+                  <h1 className="text-3xl font-bold text-foreground">{title}</h1>
                   <Badge variant="secondary" className="capitalize">
-                    {challenge.recurrence}
+                    {timeVariable}
                   </Badge>
                 </div>
-                <p className="text-muted-foreground mb-4">{challenge.description}</p>
+                <p className="text-muted-foreground mb-4">{challenge.description || challenge.summary}</p>
                 <div className="flex items-center gap-4">
                   <Badge variant="outline" className="text-sm">
                     <Calendar className="w-4 h-4 mr-1" />
-                    {challenge.category}
+                    {challenge.category || 'General'}
                   </Badge>
                   <Badge variant="outline" className="text-sm text-secondary">
                     <Coins className="w-4 h-4 mr-1" />
-                    {challenge.reward} coins per completion
+                    {reward} coins per completion
                   </Badge>
                 </div>
               </div>
@@ -162,16 +185,16 @@ const ChallengeDetail = () => {
                 <h3 className="text-lg font-semibold text-foreground">Current Streak</h3>
                 <Flame className="w-8 h-8 text-primary animate-streak-glow" />
               </div>
-              <p className="text-4xl font-bold text-primary mb-2">{localStreak} days</p>
+              <p className="text-4xl font-bold text-primary mb-2">{currentStreak} days</p>
               <p className="text-sm text-muted-foreground">Keep it going! 🔥</p>
             </Card>
 
-          <Card className="p-6 bg-gradient-card">
+            <Card className="p-6 bg-gradient-card">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-foreground">Total Earned</h3>
                 <Coins className="w-8 h-8 text-secondary" />
               </div>
-              <p className="text-4xl font-bold text-secondary mb-2">{localStreak * challenge.reward}</p>
+              <p className="text-4xl font-bold text-secondary mb-2">{currentStreak * reward}</p>
               <p className="text-sm text-muted-foreground">coins from this challenge</p>
             </Card>
           </div>
@@ -184,7 +207,7 @@ const ChallengeDetail = () => {
             </div>
             <Progress value={progressPercentage} className="h-3 mb-3" />
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{localStreak} / 30 days</span>
+              <span className="text-muted-foreground">{currentStreak} / 30 days</span>
               <span className="text-foreground font-semibold">
                 {Math.round(progressPercentage)}% complete
               </span>
@@ -197,3 +220,4 @@ const ChallengeDetail = () => {
 };
 
 export default ChallengeDetail;
+

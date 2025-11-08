@@ -198,6 +198,26 @@ def get_personalized_challenges():
 
     return jsonify(personalized_challenges)
 
+@app.route("/api/challenges/<challenge_id>", methods=["GET"])
+def get_challenge(challenge_id):
+    """Return a single challenge with user-specific fields (isActive, currentStreak)"""
+    if not challenge_id.isdigit() or not (0 <= int(challenge_id) - 1 < len(challenges_data)):
+        return jsonify({"error": "Challenge not found"}), 404
+
+    idx = int(challenge_id) - 1
+    challenge = dict(challenges_data[idx])
+    challenge_id_str = str(idx + 1)
+
+    # Ensure id and recommendation reasons are available
+    challenge["id"] = challenge_id_str
+    challenge["recommendationReasons"] = challenge.get("recommendationReasons", [])
+
+    streak_info = user_data.get("activeHabits", {}).get(challenge_id_str)
+    challenge["isActive"] = True if streak_info else False
+    challenge["currentStreak"] = 0 if not streak_info else streak_info.get("currentStreak", 0)
+
+    return jsonify(challenge)
+
 @app.route("/api/challenges/<challenge_id>/start", methods=["POST"])
 def start_challenge(challenge_id):
     if not challenge_id.isdigit() or not (0 <= int(challenge_id) - 1 < len(challenges_data)):
