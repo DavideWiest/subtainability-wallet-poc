@@ -92,6 +92,11 @@ class ApiClient {
     return response.data;
   }
 
+  async stopChallenge(challengeId: string): Promise<void> {
+    const response = await axiosInstance.post(`/challenges/${challengeId}/stop`);
+    return response.data;
+  }
+
   async completeChallenge(challengeId: string): Promise<{
     challenge: Challenge;
     reward: number;

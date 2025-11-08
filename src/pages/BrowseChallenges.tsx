@@ -32,7 +32,7 @@ const BrowseChallenges = () => {
   const toggleChallenge = async (challengeId: string) => {
     try {
       if (selectedChallenges.includes(challengeId)) {
-        // We don't have an API to "stop" a challenge; remove locally
+        await api.stopChallenge(challengeId);
         setSelectedChallenges((prev) => prev.filter((id) => id !== challengeId));
         toast.success('Challenge removed');
       } else {

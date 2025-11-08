@@ -159,6 +159,19 @@ def update_user_profile():
     logger.info("User profile updated: %s", list(payload.keys()))
     return jsonify(user_data)
 
+@app.route("/api/challenges/<challenge_id>/stop", methods=["POST"])
+def stop_challenge(challenge_id):
+    """Stop an active challenge by removing it from user's activeHabits."""
+    if "activeHabits" not in user_data:
+        user_data["activeHabits"] = {}
+    
+    if challenge_id in user_data["activeHabits"]:
+        del user_data["activeHabits"][challenge_id]
+        logger.info("Stopped challenge: %s", challenge_id)
+        return jsonify({"status": "success", "message": "Challenge stopped"})
+    else:
+        return jsonify({"status": "not_found", "message": "Challenge was not active"}), 404
+
 @app.route("/api/challenges/personalized", methods=["GET"])
 def get_personalized_challenges():
     print("Recommending personalized challenges")
