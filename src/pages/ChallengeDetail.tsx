@@ -36,6 +36,8 @@ const ChallengeDetail: React.FC = () => {
   const [challenge, setChallenge] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [rank, setRank] = useState<number | null>(null);
+  const [isTopThree, setIsTopThree] = useState(false);
 
   const fetchChallenge = async (challengeId?: string) => {
     if (!challengeId) return;
@@ -51,8 +53,30 @@ const ChallengeDetail: React.FC = () => {
     }
   };
 
+  const fetchRank = async (challengeId?: string) => {
+    if (!challengeId) return;
+    try {
+      const list = await api.getPersonalizedChallenges();
+      if (!Array.isArray(list)) return;
+      const idx = list.findIndex((c: any) => String(c.id) === String(challengeId) || String(c.challengeId) === String(challengeId));
+      if (idx >= 0) {
+        setRank(idx + 1);
+        setIsTopThree(idx < 3);
+      } else {
+        setRank(null);
+        setIsTopThree(false);
+      }
+    } catch (err) {
+      console.error('Failed to load personalized list', err);
+      setRank(null);
+      setIsTopThree(false);
+    }
+  };
+
   useEffect(() => {
+    // load both the challenge and the personalized ranking so we can highlight top-3
     fetchChallenge(id as string);
+    fetchRank(id as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -140,6 +164,15 @@ const ChallengeDetail: React.FC = () => {
                 <Icon className="w-10 h-10 text-primary-foreground" />
               </div>
               <div className="flex-1">
+                {isTopThree && rank != null && (
+                  <div className="mb-3 items-center gap-3">
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-amber-600 text-black font-semibold animate-pulse flex items-center">
+                      <Award className="w-4 h-4 mr-1" />
+                      Top #{rank}
+                    </Badge>
+                    <div className="text-sm text-foreground/80">One of your top recommendations</div>
+                  </div>
+                )}
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-3xl font-bold text-foreground">{title}</h1>
                   <Badge variant="secondary" className="capitalize">
@@ -156,6 +189,12 @@ const ChallengeDetail: React.FC = () => {
                     <Coins className="w-4 h-4 mr-1" />
                     {reward} coins per completion
                   </Badge>
+                  {typeof challenge.score === 'number' && (
+                    <Badge variant="outline" className="text-sm text-amber-500 border-amber-500">
+                      <Award className="w-4 h-4 mr-1" />
+                      {Math.round(challenge.score * 100)}% match
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>

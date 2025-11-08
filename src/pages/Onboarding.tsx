@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, XCircle, SkipForward, Leaf, Sparkles, Check } from 'lucide-react';
+import { CheckCircle2, XCircle, SkipForward, Leaf, Sparkles, Check, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import api, { Question, Challenge } from '@/lib/api';
 
@@ -152,12 +152,74 @@ const Onboarding = () => {
         ) : (
           <>
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold text-center mb-6">
-                Select Your Challenges
-              </h2>
+              <h2 className="text-2xl font-semibold text-center mb-6">Select Your Challenges</h2>
 
+              {/* Top-3 recommended section */}
+              {recommendedChallenges.length > 0 && (
+                <Card className="p-6 mb-8 bg-amber-100/20 ring-1 ring-amber-300 shadow-2xl rounded-xl">
+                  <div className="mb-3 text-center">
+                    <p className="text-sm uppercase tracking-wide text-muted-foreground">Recommended</p>
+                  </div>
+                  <div className="space-y-6 mb-4">
+                    {recommendedChallenges.slice(0, 3).map((challenge, i) => (
+                      <Card
+                        key={challenge.id}
+                        onClick={() => toggleChallenge(challenge.id)}
+                        className={`p-5 md:p-6 rounded-lg cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl border-2 ${
+                          selectedChallenges.includes(challenge.id)
+                            ? 'border-primary bg-primary/5'
+                            : 'border-amber-300 bg-amber-50/5'
+                        }`}
+                      >
+                        <div>
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1 transition-colors ${
+                            selectedChallenges.includes(challenge.id) ? 'bg-primary border-primary' : 'border-amber-400'
+                          }`}>
+                            {selectedChallenges.includes(challenge.id) && (
+                              <Check className="w-4 h-4 text-primary-foreground" />
+                            )}
+                          </div>
+                          <div>
+                            <div className="mb-1">
+                              <h3 className="font-semibold text-foreground inline-block mr-2">{challenge.challenge}</h3>
+                              <Badge className="text-xs bg-secondary text-secondary-foreground inline-block">
+                                {challenge.time_variable}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                            <div className="mt-3 space-y-2">
+                              {challenge.currency_reward_points > 0 && (
+                                <Badge className="bg-primary/10 text-primary">{challenge.currency_reward_points} points</Badge>
+                              )}
+                              {challenge.recommendationReasons && challenge.recommendationReasons.length > 0 && (
+                                <div className="text-xs text-muted-foreground">Why: {challenge.recommendationReasons.join(', ')}</div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <Button
+                            onClick={(e) => { e.stopPropagation(); toggleChallenge(challenge.id); }}
+                            variant={selectedChallenges.includes(challenge.id) ? 'secondary' : 'default'}
+                            className="w-full"
+                            aria-pressed={selectedChallenges.includes(challenge.id)}
+                          >
+                            {selectedChallenges.includes(challenge.id) ? (
+                              <><Check className="w-4 h-4 mr-2" /> Selected</>
+                            ) : (
+                              <><Plus className="w-4 h-4 mr-2" /> Add</>
+                            )}
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </Card>
+              )}
+
+              {/* Remaining recommendations */}
               <div className="space-y-3 mb-8">
-                {recommendedChallenges.map((challenge) => (
+                {recommendedChallenges.slice(3).map((challenge) => (
                   <Card
                     key={challenge.id}
                     onClick={() => toggleChallenge(challenge.id)}

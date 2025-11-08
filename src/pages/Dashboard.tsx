@@ -9,7 +9,6 @@ import {
   Coins, 
   TrendingUp, 
   Wallet,
-  Award,
   Plus
 } from 'lucide-react';
 
@@ -38,6 +37,8 @@ const Dashboard = () => {
     };
     load();
   }, []);
+
+  
 
   const activeChallenges = challenges.filter(c =>
     selectedChallengeIds.length === 0 || selectedChallengeIds.includes(c.id)
@@ -114,6 +115,9 @@ const Dashboard = () => {
             </Card>
           </div>
         </div>
+
+
+        
 
         {/* Challenges Grid */}
         <div className="mb-6">
