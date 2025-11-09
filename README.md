@@ -1,5 +1,5 @@
 
-### Your personal Sustainability Wallet
+# Your personal Sustainability Wallet
 - Wallet with challenges
 - accept challenges specifically tailored for you
 - complete challenges and claim rewards
